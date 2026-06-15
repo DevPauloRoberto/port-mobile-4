@@ -1,0 +1,86 @@
+<ion-header>
+  <ion-toolbar class="page-toolbar">
+    <ion-title>
+      <span aria-hidden="true">🔢</span> Grupos Copa 2026
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="page-content" role="main">
+  <ion-refresher slot="fixed" (ionRefresh)="carregarTodos($event)" aria-label="Atualizar classificação">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <!-- ── Selector de Grupo ─────────────────────────────────────────────────── -->
+  <div class="group-selector" role="tablist" aria-label="Selecionar grupo">
+    <button
+      *ngFor="let g of grupos"
+      class="group-btn"
+      [class.active]="grupoSelecionado === g"
+      (click)="selecionarGrupo(g)"
+      role="tab"
+      [attr.aria-selected]="grupoSelecionado === g"
+      [attr.aria-label]="'Grupo ' + g">
+      {{ g }}
+    </button>
+  </div>
+
+  <!-- ── Loading ───────────────────────────────────────────────────────────── -->
+  <div *ngIf="carregando" class="loading-wrap" role="status" aria-label="Carregando">
+    <ion-skeleton-text animated *ngFor="let i of [1,2,3,4]" class="skel"></ion-skeleton-text>
+  </div>
+
+  <!-- ── Tabela de Classificação ──────────────────────────────────────────── -->
+  <div *ngIf="!carregando" class="group-card" role="region" [attr.aria-label]="'Classificação Grupo ' + grupoSelecionado">
+
+    <h2 class="group-title">Grupo {{ grupoSelecionado }}</h2>
+
+    <div class="table-wrap" role="table" [attr.aria-label]="'Tabela grupo ' + grupoSelecionado">
+
+      <!-- Header -->
+      <div class="table-head" role="row">
+        <span class="col-team" role="columnheader">Seleção</span>
+        <span class="col-num" role="columnheader" title="Jogos">J</span>
+        <span class="col-num" role="columnheader" title="Vitórias">V</span>
+        <span class="col-num" role="columnheader" title="Empates">E</span>
+        <span class="col-num" role="columnheader" title="Derrotas">D</span>
+        <span class="col-num" role="columnheader" title="Saldo de gols">SG</span>
+        <span class="col-pts" role="columnheader" title="Pontos">Pts</span>
+      </div>
+
+      <!-- Rows -->
+      <div
+        class="table-row"
+        *ngFor="let item of classificacao; let i = index"
+        [class.qualify]="i < 2"
+        role="row"
+        (click)="irParaSelecao(item.selecao_id)"
+        [attr.aria-label]="item.nome + ', ' + item.pontos + ' pontos'"
+        tabindex="0"
+        (keyup.enter)="irParaSelecao(item.selecao_id)">
+
+        <span class="col-team" role="cell">
+          <span class="pos-badge" [class.pos-top]="i < 2">{{ i + 1 }}</span>
+          <span class="row-flag" aria-hidden="true">{{ getFlag(item.codigo) }}</span>
+          <span class="row-name">{{ item.nome }}</span>
+        </span>
+        <span class="col-num" role="cell">{{ item.jogos }}</span>
+        <span class="col-num" role="cell">{{ item.vitorias }}</span>
+        <span class="col-num" role="cell">{{ item.empates }}</span>
+        <span class="col-num" role="cell">{{ item.derrotas }}</span>
+        <span class="col-num" role="cell">{{ item.saldo_gols }}</span>
+        <span class="col-pts" role="cell">{{ item.pontos }}</span>
+      </div>
+
+      <div *ngIf="classificacao.length === 0" class="empty-row" role="row">
+        <span role="cell">Nenhum dado disponível</span>
+      </div>
+    </div>
+
+    <p class="qualify-legend" aria-label="As duas primeiras seleções se classificam">
+      <span class="qualify-dot" aria-hidden="true"></span> Classificado para as oitavas
+    </p>
+  </div>
+
+  <div style="height: 20px;"></div>
+</ion-content>

@@ -1,0 +1,89 @@
+<ion-header>
+  <ion-toolbar class="page-toolbar">
+    <ion-title><span aria-hidden="true">⚽</span> Partidas</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="page-content" role="main">
+  <ion-refresher slot="fixed" (ionRefresh)="carregar($event)" aria-label="Atualizar partidas">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <!-- ── Filtro por grupo ──────────────────────────────────────────────────── -->
+  <div class="filter-bar" role="toolbar" aria-label="Filtrar por grupo">
+    <button
+      *ngFor="let g of grupos"
+      class="filter-btn"
+      [class.active]="grupoFiltro === g"
+      (click)="setFiltro(g)"
+      [attr.aria-pressed]="grupoFiltro === g"
+      [attr.aria-label]="g === 'Todos' ? 'Mostrar todos os grupos' : 'Filtrar grupo ' + g">
+      {{ g }}
+    </button>
+  </div>
+
+  <!-- ── Loading ──────────────────────────────────────────────────────────── -->
+  <div *ngIf="carregando" class="skels" role="status" aria-label="Carregando partidas">
+    <ion-skeleton-text animated *ngFor="let i of [1,2,3,4,5]" class="skel"></ion-skeleton-text>
+  </div>
+
+  <!-- ── Sem resultados ───────────────────────────────────────────────────── -->
+  <div *ngIf="!carregando && filtradas.length === 0" class="empty" role="status">
+    <span aria-hidden="true">🏟️</span>
+    <p>Nenhuma partida para este grupo.</p>
+  </div>
+
+  <!-- ── Lista de partidas ─────────────────────────────────────────────────── -->
+  <div class="match-list" *ngIf="!carregando" role="list" aria-label="Lista de partidas">
+
+    <article
+      class="match-card"
+      *ngFor="let p of filtradas"
+      role="listitem"
+      [attr.aria-label]="p.casa_nome + ' versus ' + p.fora_nome + ' em ' + p.estadio">
+
+      <!-- Topo: grupo + status -->
+      <div class="card-top">
+        <span class="badge-grupo" *ngIf="p.grupo">Grupo {{ p.grupo }}</span>
+        <span class="badge-fase" *ngIf="!p.grupo">{{ p.fase }}</span>
+        <span [class]="'badge-status ' + getStatusClass(p.status)">
+          {{ getStatusLabel(p.status) }}
+        </span>
+      </div>
+
+      <!-- Times e placar -->
+      <div class="card-teams">
+        <div class="team-block">
+          <span class="team-flag" aria-hidden="true">{{ getFlag(p.casa_codigo) }}</span>
+          <span class="team-name">{{ p.casa_nome }}</span>
+        </div>
+
+        <div class="center-block">
+          <div class="placar" *ngIf="p.status === 'encerrada'">
+            {{ p.gols_casa }} <span class="placar-sep">–</span> {{ p.gols_fora }}
+          </div>
+          <div class="vs" *ngIf="p.status !== 'encerrada'">
+            <span class="hora">{{ formatarHora(p.data_hora) }}</span>
+            <span class="vs-text">VS</span>
+          </div>
+        </div>
+
+        <div class="team-block end">
+          <span class="team-flag" aria-hidden="true">{{ getFlag(p.fora_codigo) }}</span>
+          <span class="team-name">{{ p.fora_nome }}</span>
+        </div>
+      </div>
+
+      <!-- Rodapé: estádio e data -->
+      <div class="card-footer">
+        <ion-icon name="location-outline" aria-hidden="true"></ion-icon>
+        <span>{{ p.estadio }}, {{ p.cidade }}</span>
+        <span class="dot" aria-hidden="true">·</span>
+        <span>{{ formatarData(p.data_hora) }}</span>
+      </div>
+    </article>
+
+  </div>
+
+  <div style="height: 20px;"></div>
+</ion-content>

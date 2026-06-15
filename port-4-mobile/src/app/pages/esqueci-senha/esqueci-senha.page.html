@@ -1,0 +1,89 @@
+<ion-header class="auth-header">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/login" text="" aria-label="Voltar para login"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="auth-content" role="main">
+  <div class="auth-bg">
+
+    <div class="logo-wrap" aria-label="Recuperar senha">
+      <div class="trophy" aria-hidden="true">🔑</div>
+      <h1 class="copa-title">NOVA SENHA</h1>
+      <p class="copa-sub">Redefina sua senha de acesso</p>
+    </div>
+
+    <!-- Card sucesso -->
+    <div class="auth-card sucesso-card" *ngIf="sucesso" role="status" aria-live="polite">
+      <div class="sucesso-icon" aria-hidden="true">✅</div>
+      <h3>Senha Atualizada!</h3>
+      <p>Redirecionando para o login…</p>
+    </div>
+
+    <!-- Card form -->
+    <div class="auth-card" *ngIf="!sucesso">
+
+      <form [formGroup]="form" (ngSubmit)="onSolicitar()" novalidate
+        role="form" aria-label="Formulário de redefinição de senha">
+
+        <!-- E-mail -->
+        <div class="field-wrap">
+          <ion-item class="custom-item" lines="none">
+            <ion-icon name="mail-outline" slot="start" aria-hidden="true"></ion-icon>
+            <ion-label position="floating">E-mail cadastrado</ion-label>
+            <ion-input type="email" formControlName="email" inputmode="email"
+              autocomplete="email" aria-label="E-mail cadastrado" aria-required="true"></ion-input>
+          </ion-item>
+          <p class="field-error" role="alert" *ngIf="emailCtrl?.invalid && emailCtrl?.touched">
+            E-mail inválido.
+          </p>
+        </div>
+
+        <!-- Nova senha -->
+        <div class="field-wrap">
+          <ion-item class="custom-item" lines="none">
+            <ion-icon name="lock-closed-outline" slot="start" aria-hidden="true"></ion-icon>
+            <ion-label position="floating">Nova senha</ion-label>
+            <ion-input [type]="mostrarSenha ? 'text' : 'password'" formControlName="novaSenha"
+              autocomplete="new-password" aria-label="Nova senha" aria-required="true"></ion-input>
+            <ion-button fill="clear" slot="end" (click)="mostrarSenha=!mostrarSenha"
+              [attr.aria-label]="mostrarSenha ? 'Ocultar senha' : 'Mostrar senha'">
+              <ion-icon [name]="mostrarSenha ? 'eye-off-outline' : 'eye-outline'" aria-hidden="true"></ion-icon>
+            </ion-button>
+          </ion-item>
+          <p class="field-error" role="alert" *ngIf="novaSenhaCtrl?.invalid && novaSenhaCtrl?.touched">
+            Mínimo 6 caracteres.
+          </p>
+        </div>
+
+        <!-- Confirmar nova senha -->
+        <div class="field-wrap">
+          <ion-item class="custom-item" lines="none">
+            <ion-icon name="shield-checkmark-outline" slot="start" aria-hidden="true"></ion-icon>
+            <ion-label position="floating">Confirmar nova senha</ion-label>
+            <ion-input [type]="mostrarSenha ? 'text' : 'password'" formControlName="confirmarSenha"
+              autocomplete="new-password" aria-label="Confirmar nova senha" aria-required="true"></ion-input>
+          </ion-item>
+          <p class="field-error" role="alert"
+            *ngIf="(confirmCtrl?.touched || novaSenhaCtrl?.touched) && form.errors?.['senhasDiferentes']">
+            As senhas não coincidem.
+          </p>
+        </div>
+
+        <ion-button expand="block" type="submit" class="btn-primary"
+          [disabled]="loading" aria-label="Redefinir senha">
+          <ion-spinner *ngIf="loading" name="crescent" aria-hidden="true"></ion-spinner>
+          <span *ngIf="!loading">Redefinir Senha</span>
+        </ion-button>
+      </form>
+
+      <div class="auth-links">
+        <ion-button fill="clear" class="link-btn" (click)="goToLogin()" aria-label="Voltar para login">
+          Voltar ao login
+        </ion-button>
+      </div>
+    </div>
+  </div>
+</ion-content>

@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  # ── PostgreSQL ────────────────────────────────────────────────────────────
+  postgres:
+    image: postgres:15-alpine
+    container_name: copa2026-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB:       copa2026
+      POSTGRES_USER:     postgres
+      POSTGRES_PASSWORD: postgres123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - copa2026-net
+    healthcheck:
+      test:     ["CMD-SHELL", "pg_isready -U postgres -d copa2026"]
+      interval: 10s
+      timeout:  5s
+      retries:  8
+
+  # ── Backend Node.js/Express ───────────────────────────────────────────────
+  backend:
+    build:
+      context:    ./backend
+      dockerfile: Dockerfile
+    container_name: copa2026-backend
+    restart: unless-stopped
+    environment:
+      DB_HOST:     postgres
+      DB_PORT:     5432
+      DB_NAME:     copa2026
+      DB_USER:     postgres
+      DB_PASSWORD: postgres123
+      PORT:        3000
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - copa2026-net
+
+  # ── Frontend Ionic/Angular (nginx) ────────────────────────────────────────
+  frontend:
+    build:
+      context:    ./port-4-mobile
+      dockerfile: Dockerfile
+    container_name: copa2026-frontend
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+    networks:
+      - copa2026-net
+
+networks:
+  copa2026-net:
+    driver: bridge
+
+volumes:
+  postgres_data:

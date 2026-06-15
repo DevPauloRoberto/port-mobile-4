@@ -1,0 +1,15 @@
+@use '../login/login.page.scss' as *;
+
+.auth-header ion-toolbar {
+  --background: transparent;
+  --border-width: 0;
+  ion-back-button { --color: rgba(255,255,255,0.7); }
+}
+
+.sucesso-card {
+  text-align: center;
+  padding: 40px 24px;
+  .sucesso-icon { font-size: 56px; margin-bottom: 12px; }
+  h3 { color: #FFD700; font-size: 22px; margin: 0 0 8px; }
+  p  { color: rgba(255,255,255,0.6); font-size: 14px; }
+}

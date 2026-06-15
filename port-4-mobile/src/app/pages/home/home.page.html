@@ -1,0 +1,125 @@
+<ion-header>
+  <ion-toolbar class="home-toolbar">
+    <div class="toolbar-content">
+      <div>
+        <p class="toolbar-greeting">Bem-vindo,</p>
+        <h2 class="toolbar-name">{{ nomeUsuario }} 👋</h2>
+      </div>
+      <div class="trophy-small" aria-hidden="true">🏆</div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="home-content" role="main" [scrollEvents]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="carregarDados($event)" aria-label="Atualizar dados">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <!-- ── Hero Banner ──────────────────────────────────────────────────────── -->
+  <div class="hero-banner" role="banner" aria-label="Copa do Mundo 2026">
+    <div class="hero-content">
+      <p class="hero-label">FIFA WORLD CUP™</p>
+      <h1 class="hero-title">COPA 2026</h1>
+      <p class="hero-countries">🇺🇸 EUA &nbsp;·&nbsp; 🇨🇦 Canadá &nbsp;·&nbsp; 🇲🇽 México</p>
+      <div class="hero-date">11 Jun – 19 Jul 2026</div>
+    </div>
+    <div class="hero-ball" aria-hidden="true">⚽</div>
+  </div>
+
+  <!-- ── Stats ───────────────────────────────────────────────────────────── -->
+  <section class="section" aria-label="Estatísticas da Copa">
+    <div class="stats-grid" role="list">
+
+      <div class="stat-card" role="listitem" tabindex="0" aria-label="32 seleções participantes">
+        <span class="stat-icon" aria-hidden="true">🌍</span>
+        <span class="stat-value">{{ stats.selecoes }}</span>
+        <span class="stat-label">Seleções</span>
+      </div>
+
+      <div class="stat-card" role="listitem" tabindex="0" aria-label="8 grupos">
+        <span class="stat-icon" aria-hidden="true">🔢</span>
+        <span class="stat-value">{{ stats.grupos }}</span>
+        <span class="stat-label">Grupos</span>
+      </div>
+
+      <div class="stat-card" role="listitem" tabindex="0" aria-label="104 partidas">
+        <span class="stat-icon" aria-hidden="true">⚽</span>
+        <span class="stat-value">{{ stats.partidas }}</span>
+        <span class="stat-label">Partidas</span>
+      </div>
+
+      <div class="stat-card" role="listitem" tabindex="0" aria-label="16 estádios">
+        <span class="stat-icon" aria-hidden="true">🏟️</span>
+        <span class="stat-value">{{ stats.estadios }}</span>
+        <span class="stat-label">Estádios</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── Próximas Partidas ────────────────────────────────────────────────── -->
+  <section class="section" aria-label="Próximas partidas">
+    <h2 class="section-title">Próximas Partidas</h2>
+
+    <div *ngIf="carregando" class="loading-wrap" role="status" aria-label="Carregando partidas">
+      <ion-skeleton-text animated class="skel" *ngFor="let i of [1,2,3]"></ion-skeleton-text>
+    </div>
+
+    <div *ngIf="!carregando && partidas.length === 0" class="empty-state" role="status">
+      <p>Nenhuma partida encontrada.</p>
+    </div>
+
+    <div class="match-cards" *ngIf="!carregando">
+      <div class="match-card" *ngFor="let p of partidas"
+        role="article" [attr.aria-label]="p.casa_nome + ' vs ' + p.fora_nome">
+
+        <div class="match-meta">
+          <span class="match-grupo">Grupo {{ p.grupo }}</span>
+          <span [class]="'match-status ' + getStatusClass(p.status)">
+            {{ getStatusLabel(p.status) }}
+          </span>
+        </div>
+
+        <div class="match-teams">
+          <div class="team">
+            <span class="team-flag" aria-hidden="true">{{ getFlag(p.casa_codigo) }}</span>
+            <span class="team-name">{{ p.casa_nome }}</span>
+          </div>
+          <div class="match-vs">
+            <span class="score" *ngIf="p.status === 'encerrada'">
+              {{ p.gols_casa }} – {{ p.gols_fora }}
+            </span>
+            <span class="vs-text" *ngIf="p.status !== 'encerrada'">VS</span>
+            <span class="match-hora">{{ formatarHora(p.data_hora) }}</span>
+          </div>
+          <div class="team">
+            <span class="team-flag" aria-hidden="true">{{ getFlag(p.fora_codigo) }}</span>
+            <span class="team-name">{{ p.fora_nome }}</span>
+          </div>
+        </div>
+
+        <div class="match-venue">
+          <ion-icon name="location-outline" aria-hidden="true"></ion-icon>
+          {{ p.estadio }}, {{ p.cidade }} · {{ formatarData(p.data_hora) }}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Seleções Destaque ────────────────────────────────────────────────── -->
+  <section class="section" aria-label="Seleções participantes">
+    <h2 class="section-title">Seleções</h2>
+    <div class="teams-grid" role="list">
+      <button class="team-chip" *ngFor="let s of selecoes"
+        (click)="irParaSelecao(s.id)"
+        role="listitem"
+        [attr.aria-label]="'Ver detalhes de ' + s.nome">
+        <span class="chip-flag" aria-hidden="true">{{ getFlag(s.codigo) }}</span>
+        <span class="chip-name">{{ s.nome }}</span>
+        <span class="chip-rank">Rank #{{ s.ranking_fifa }}</span>
+      </button>
+    </div>
+  </section>
+
+  <div style="height: 20px;"></div>
+</ion-content>

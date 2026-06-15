@@ -1,0 +1,16 @@
+@use '../login/login.page.scss' as *;
+
+.auth-header ion-toolbar {
+  --background: transparent;
+  --border-width: 0;
+  ion-back-button { --color: rgba(255,255,255,0.7); }
+}
+
+.copa-title { font-size: 26px; letter-spacing: 4px; }
+
+.auth-card { padding-bottom: 24px; }
+
+.link-txt {
+  color: rgba(255,255,255,0.5);
+  font-size: 13px;
+}

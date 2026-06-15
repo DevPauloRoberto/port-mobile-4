@@ -1,0 +1,103 @@
+<ion-header>
+  <ion-toolbar class="page-toolbar">
+    <ion-title><span aria-hidden="true">👤</span> Meu Perfil</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="toggleEdicao()" [attr.aria-label]="modoEdicao ? 'Cancelar edição' : 'Editar perfil'">
+        <ion-icon [name]="modoEdicao ? 'close-outline' : 'pencil-outline'" aria-hidden="true"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="page-content" role="main">
+
+  <!-- ── Avatar ──────────────────────────────────────────────────────────── -->
+  <div class="avatar-section" aria-label="Informações do usuário">
+    <div class="avatar" role="img" [attr.aria-label]="'Iniciais ' + getInitials()">
+      {{ getInitials() }}
+    </div>
+    <h2 class="user-name">{{ usuario?.nome }}</h2>
+    <p class="user-email">{{ usuario?.email }}</p>
+    <div class="favorito-badge" *ngIf="usuario?.pais_favorito" aria-label="Seleção favorita">
+      <span aria-hidden="true">{{ getFlagFavorito() }}</span>
+      {{ getNomeFavorito() }}
+    </div>
+  </div>
+
+  <!-- ── Formulário de edição ──────────────────────────────────────────── -->
+  <div class="edit-card" *ngIf="modoEdicao" role="region" aria-label="Editar perfil">
+    <h3 class="edit-title">Editar Perfil</h3>
+
+    <form [formGroup]="form" (ngSubmit)="salvar()" novalidate aria-label="Formulário de edição">
+
+      <div class="field-wrap">
+        <ion-item class="custom-item" lines="none">
+          <ion-icon name="person-outline" slot="start" aria-hidden="true"></ion-icon>
+          <ion-label position="floating">Nome</ion-label>
+          <ion-input formControlName="nome" autocomplete="name"
+            aria-label="Nome" aria-required="true"></ion-input>
+        </ion-item>
+        <p class="field-error" role="alert" *ngIf="nomeCtrl?.invalid && nomeCtrl?.touched">
+          Nome deve ter pelo menos 2 caracteres.
+        </p>
+      </div>
+
+      <div class="field-wrap">
+        <ion-item class="custom-item" lines="none">
+          <ion-icon name="flag-outline" slot="start" aria-hidden="true"></ion-icon>
+          <ion-label position="floating">Seleção favorita</ion-label>
+          <ion-select formControlName="pais_favorito" interface="action-sheet"
+            aria-label="Seleção favorita" placeholder="Escolha sua seleção">
+            <ion-select-option value="">Nenhuma</ion-select-option>
+            <ion-select-option *ngFor="let s of selecoes" [value]="s.codigo">
+              {{ s.nome }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+      </div>
+
+      <ion-button expand="block" type="submit" class="btn-salvar"
+        [disabled]="salvando" aria-label="Salvar alterações">
+        <ion-spinner *ngIf="salvando" name="crescent" aria-hidden="true"></ion-spinner>
+        <ion-icon *ngIf="!salvando" name="checkmark-outline" slot="start" aria-hidden="true"></ion-icon>
+        <span *ngIf="!salvando">Salvar</span>
+      </ion-button>
+    </form>
+  </div>
+
+  <!-- ── Info card ────────────────────────────────────────────────────────── -->
+  <div class="info-card" *ngIf="!modoEdicao" role="region" aria-label="Detalhes da conta">
+    <div class="info-row" role="row">
+      <ion-icon name="mail-outline" aria-hidden="true"></ion-icon>
+      <div class="info-content">
+        <span class="info-label">E-mail</span>
+        <span class="info-value">{{ usuario?.email }}</span>
+      </div>
+    </div>
+    <div class="info-row" role="row">
+      <ion-icon name="trophy-outline" aria-hidden="true"></ion-icon>
+      <div class="info-content">
+        <span class="info-label">Seleção favorita</span>
+        <span class="info-value">{{ getNomeFavorito() }}</span>
+      </div>
+    </div>
+    <div class="info-row" role="row">
+      <ion-icon name="football-outline" aria-hidden="true"></ion-icon>
+      <div class="info-content">
+        <span class="info-label">Copa do Mundo</span>
+        <span class="info-value">2026 · EUA · Canadá · México</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Logout ────────────────────────────────────────────────────────────── -->
+  <div class="logout-wrap" *ngIf="!modoEdicao">
+    <ion-button expand="block" fill="outline" class="btn-logout"
+      (click)="confirmarLogout()" aria-label="Sair da conta">
+      <ion-icon name="log-out-outline" slot="start" aria-hidden="true"></ion-icon>
+      Sair da conta
+    </ion-button>
+  </div>
+
+  <div style="height: 30px;"></div>
+</ion-content>

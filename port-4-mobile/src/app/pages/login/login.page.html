@@ -1,0 +1,85 @@
+<ion-content class="auth-content" role="main">
+  <div class="auth-bg">
+    <div class="auth-overlay"></div>
+
+    <!-- ── Logo ─────────────────────────────────────────────────────────── -->
+    <div class="logo-wrap" aria-label="Copa do Mundo 2026">
+      <div class="trophy" aria-hidden="true">🏆</div>
+      <h1 class="copa-title">COPA 2026</h1>
+      <p class="copa-sub">FIFA World Cup™ — USA · Canada · México</p>
+    </div>
+
+    <!-- ── Card de Login ─────────────────────────────────────────────────── -->
+    <div class="auth-card" role="form" aria-label="Formulário de login">
+      <h2 class="card-title">Entrar</h2>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onLogin()" novalidate>
+
+        <!-- E-mail -->
+        <div class="field-wrap">
+          <ion-item class="custom-item" lines="none">
+            <ion-icon name="mail-outline" slot="start" aria-hidden="true"></ion-icon>
+            <ion-label position="floating">E-mail</ion-label>
+            <ion-input
+              type="email"
+              formControlName="email"
+              autocomplete="email"
+              inputmode="email"
+              aria-label="E-mail"
+              aria-required="true">
+            </ion-input>
+          </ion-item>
+          <p class="field-error" role="alert" *ngIf="emailCtrl?.invalid && emailCtrl?.touched">
+            E-mail inválido.
+          </p>
+        </div>
+
+        <!-- Senha -->
+        <div class="field-wrap">
+          <ion-item class="custom-item" lines="none">
+            <ion-icon name="lock-closed-outline" slot="start" aria-hidden="true"></ion-icon>
+            <ion-label position="floating">Senha</ion-label>
+            <ion-input
+              [type]="mostrarSenha ? 'text' : 'password'"
+              formControlName="senha"
+              autocomplete="current-password"
+              aria-label="Senha"
+              aria-required="true">
+            </ion-input>
+            <ion-button fill="clear" slot="end" (click)="toggleSenha()"
+              [attr.aria-label]="mostrarSenha ? 'Ocultar senha' : 'Mostrar senha'">
+              <ion-icon [name]="mostrarSenha ? 'eye-off-outline' : 'eye-outline'" aria-hidden="true"></ion-icon>
+            </ion-button>
+          </ion-item>
+          <p class="field-error" role="alert" *ngIf="senhaCtrl?.invalid && senhaCtrl?.touched">
+            Mínimo de 6 caracteres.
+          </p>
+        </div>
+
+        <!-- Botão -->
+        <ion-button
+          expand="block"
+          type="submit"
+          class="btn-primary"
+          [disabled]="loading"
+          aria-label="Fazer login">
+          <ion-spinner *ngIf="loading" name="crescent" aria-hidden="true"></ion-spinner>
+          <span *ngIf="!loading">Entrar</span>
+        </ion-button>
+      </form>
+
+      <!-- Links -->
+      <div class="auth-links">
+        <ion-button fill="clear" class="link-btn" (click)="goToEsqueciSenha()"
+          aria-label="Esqueceu sua senha?">
+          Esqueceu a senha?
+        </ion-button>
+        <span class="link-divider" aria-hidden="true">·</span>
+        <ion-button fill="clear" class="link-btn" (click)="goToCadastro()"
+          aria-label="Criar uma nova conta">
+          Criar conta
+        </ion-button>
+      </div>
+    </div>
+  </div>
+</ion-content>

@@ -1,0 +1,108 @@
+<ion-header class="auth-header">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/login" text="" aria-label="Voltar para login"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="auth-content" role="main">
+  <div class="auth-bg">
+
+    <div class="logo-wrap" aria-label="Copa do Mundo 2026">
+      <div class="trophy" aria-hidden="true">⚽</div>
+      <h1 class="copa-title">CRIAR CONTA</h1>
+      <p class="copa-sub">Junte-se à Copa 2026</p>
+    </div>
+
+    <div class="auth-card">
+
+      <form [formGroup]="form" (ngSubmit)="onCadastro()" novalidate role="form" aria-label="Formulário de cadastro">
+
+        <!-- Nome -->
+        <div class="field-wrap">
+          <ion-item class="custom-item" lines="none">
+            <ion-icon name="person-outline" slot="start" aria-hidden="true"></ion-icon>
+            <ion-label position="floating">Nome completo</ion-label>
+            <ion-input formControlName="nome" autocomplete="name"
+              aria-label="Nome completo" aria-required="true"></ion-input>
+          </ion-item>
+          <p class="field-error" role="alert" *ngIf="nomeCtrl?.invalid && nomeCtrl?.touched">
+            Nome deve ter pelo menos 2 caracteres.
+          </p>
+        </div>
+
+        <!-- E-mail -->
+        <div class="field-wrap">
+          <ion-item class="custom-item" lines="none">
+            <ion-icon name="mail-outline" slot="start" aria-hidden="true"></ion-icon>
+            <ion-label position="floating">E-mail</ion-label>
+            <ion-input type="email" formControlName="email" inputmode="email"
+              autocomplete="email" aria-label="E-mail" aria-required="true"></ion-input>
+          </ion-item>
+          <p class="field-error" role="alert" *ngIf="emailCtrl?.invalid && emailCtrl?.touched">
+            E-mail inválido.
+          </p>
+        </div>
+
+        <!-- Senha -->
+        <div class="field-wrap">
+          <ion-item class="custom-item" lines="none">
+            <ion-icon name="lock-closed-outline" slot="start" aria-hidden="true"></ion-icon>
+            <ion-label position="floating">Senha</ion-label>
+            <ion-input [type]="mostrarSenha ? 'text' : 'password'" formControlName="senha"
+              autocomplete="new-password" aria-label="Senha" aria-required="true"></ion-input>
+            <ion-button fill="clear" slot="end" (click)="mostrarSenha=!mostrarSenha"
+              [attr.aria-label]="mostrarSenha ? 'Ocultar senha' : 'Mostrar senha'">
+              <ion-icon [name]="mostrarSenha ? 'eye-off-outline' : 'eye-outline'" aria-hidden="true"></ion-icon>
+            </ion-button>
+          </ion-item>
+          <p class="field-error" role="alert" *ngIf="senhaCtrl?.invalid && senhaCtrl?.touched">
+            Mínimo 6 caracteres.
+          </p>
+        </div>
+
+        <!-- Confirmar Senha -->
+        <div class="field-wrap">
+          <ion-item class="custom-item" lines="none">
+            <ion-icon name="shield-checkmark-outline" slot="start" aria-hidden="true"></ion-icon>
+            <ion-label position="floating">Confirmar senha</ion-label>
+            <ion-input [type]="mostrarSenha ? 'text' : 'password'" formControlName="confirmarSenha"
+              autocomplete="new-password" aria-label="Confirmar senha" aria-required="true"></ion-input>
+          </ion-item>
+          <p class="field-error" role="alert"
+            *ngIf="(confirmCtrl?.touched || senhaCtrl?.touched) && form.errors?.['senhasDiferentes']">
+            As senhas não coincidem.
+          </p>
+        </div>
+
+        <!-- País Favorito -->
+        <div class="field-wrap">
+          <ion-item class="custom-item" lines="none">
+            <ion-icon name="flag-outline" slot="start" aria-hidden="true"></ion-icon>
+            <ion-label position="floating">Seleção favorita (opcional)</ion-label>
+            <ion-select formControlName="pais_favorito" interface="action-sheet"
+              aria-label="Seleção favorita" placeholder="Escolha sua seleção">
+              <ion-select-option *ngFor="let s of selecoes" [value]="s.codigo">
+                {{ s.nome }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+        </div>
+
+        <ion-button expand="block" type="submit" class="btn-primary"
+          [disabled]="loading" aria-label="Criar conta">
+          <ion-spinner *ngIf="loading" name="crescent" aria-hidden="true"></ion-spinner>
+          <span *ngIf="!loading">Criar Conta</span>
+        </ion-button>
+      </form>
+
+      <div class="auth-links">
+        <span class="link-txt">Já tem conta?</span>
+        <ion-button fill="clear" class="link-btn" (click)="goToLogin()" aria-label="Fazer login">
+          Entrar
+        </ion-button>
+      </div>
+    </div>
+  </div>
+</ion-content>

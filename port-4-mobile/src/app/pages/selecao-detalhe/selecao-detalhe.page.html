@@ -1,0 +1,102 @@
+<ion-header>
+  <ion-toolbar class="detalhe-toolbar">
+    <ion-buttons slot="start">
+      <ion-back-button (click)="voltar()" text="" aria-label="Voltar"></ion-back-button>
+    </ion-buttons>
+    <ion-title *ngIf="selecao">{{ selecao.nome }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="detalhe-content" role="main">
+
+  <!-- Loading -->
+  <div *ngIf="carregando" class="loading-full" role="status" aria-label="Carregando">
+    <ion-spinner name="crescent" color="warning"></ion-spinner>
+    <p>Carregando seleção…</p>
+  </div>
+
+  <!-- Erro -->
+  <div *ngIf="erro && !carregando" class="erro-box" role="alert">
+    <span aria-hidden="true">⚠️</span>
+    <p>{{ erro }}</p>
+    <ion-button fill="clear" (click)="voltar()">Voltar</ion-button>
+  </div>
+
+  <!-- Conteúdo -->
+  <ng-container *ngIf="selecao && !carregando">
+
+    <!-- ── Hero da seleção ──────────────────────────────────────────────── -->
+    <div class="hero-selecao" role="banner" [attr.aria-label]="'Seleção ' + selecao.nome">
+      <div class="hero-flag" aria-hidden="true">{{ getFlag() }}</div>
+      <h1 class="hero-nome">{{ selecao.nome }}</h1>
+      <div class="hero-badges">
+        <span class="badge-conf">{{ selecao.confederacao }}</span>
+        <span class="badge-grupo">Grupo {{ selecao.grupo }}</span>
+        <span class="badge-rank">🏅 Rank #{{ selecao.ranking_fifa }}</span>
+      </div>
+    </div>
+
+    <!-- ── Informações ─────────────────────────────────────────────────── -->
+    <div class="info-card" role="region" aria-label="Informações da seleção">
+      <div class="info-row">
+        <ion-icon name="person-outline" aria-hidden="true"></ion-icon>
+        <div>
+          <span class="info-label">Treinador</span>
+          <span class="info-val">{{ selecao.treinador || 'A confirmar' }}</span>
+        </div>
+      </div>
+      <div class="info-row">
+        <ion-icon name="globe-outline" aria-hidden="true"></ion-icon>
+        <div>
+          <span class="info-label">Confederação</span>
+          <span class="info-val">{{ selecao.confederacao }}</span>
+        </div>
+      </div>
+      <div class="info-row">
+        <ion-icon name="podium-outline" aria-hidden="true"></ion-icon>
+        <div>
+          <span class="info-label">Ranking FIFA</span>
+          <span class="info-val">#{{ selecao.ranking_fifa }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Jogadores ───────────────────────────────────────────────────── -->
+    <div class="section-wrap" role="region" aria-label="Elenco da seleção">
+      <h2 class="section-title">
+        <span aria-hidden="true">👕</span> Elenco
+        <span class="total-badge">{{ selecao.jogadores.length }}</span>
+      </h2>
+
+      <ng-container *ngFor="let pos of posicaoOrdem">
+        <ng-container *ngIf="posicaoTemJogadores(pos)">
+          <div class="pos-group">
+            <h3 class="pos-label">{{ pos }}es</h3>
+            <div class="player-list" role="list">
+              <div class="player-card" *ngFor="let j of jogadoresPorPosicao(pos)"
+                role="listitem"
+                [attr.aria-label]="j.nome + ', ' + j.posicao + ', número ' + j.numero">
+
+                <div class="player-num" aria-hidden="true">{{ j.numero ?? '–' }}</div>
+                <div class="player-info">
+                  <span class="player-name">{{ j.nome }}</span>
+                  <span class="player-meta">
+                    {{ j.clube }} · {{ j.idade }} anos
+                  </span>
+                </div>
+                <div class="player-pos-badge" aria-hidden="true">{{ pos[0] }}</div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </ng-container>
+
+      <div *ngIf="selecao.jogadores.length === 0" class="empty" role="status">
+        <p>Nenhum jogador cadastrado.</p>
+      </div>
+    </div>
+
+  </ng-container>
+
+  <div style="height: 30px;"></div>
+</ion-content>

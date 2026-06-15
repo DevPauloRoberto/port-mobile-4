@@ -1,0 +1,7 @@
+{
+  "name": "port-4-mobile",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
