@@ -8,7 +8,7 @@ RUN npm run build -- --configuration=production
 
 # ── Stage 2: Serve com nginx ──────────────────────────────────────────────────
 FROM nginx:alpine
-COPY --from=builder /app/dist/port-4-mobile/browser /usr/share/nginx/html
+COPY --from=builder /app/www /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
