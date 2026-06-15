@@ -1,22 +1,22 @@
 <ion-tabs>
   <ion-tab-bar slot="bottom" role="tablist" aria-label="Navegação principal">
 
-    <ion-tab-button tab="home" href="/tabs/home" role="tab" aria-label="Início">
+    <ion-tab-button tab="home" [routerLink]="['/tabs/home']" routerDirection="root" role="tab" aria-label="Início">
       <ion-icon name="home-outline" aria-hidden="true"></ion-icon>
       <ion-label>Início</ion-label>
     </ion-tab-button>
 
-    <ion-tab-button tab="grupos" href="/tabs/grupos" role="tab" aria-label="Grupos">
+    <ion-tab-button tab="grupos" [routerLink]="['/tabs/grupos']" routerDirection="root" role="tab" aria-label="Grupos">
       <ion-icon name="grid-outline" aria-hidden="true"></ion-icon>
       <ion-label>Grupos</ion-label>
     </ion-tab-button>
 
-    <ion-tab-button tab="partidas" href="/tabs/partidas" role="tab" aria-label="Partidas">
+    <ion-tab-button tab="partidas" [routerLink]="['/tabs/partidas']" routerDirection="root" role="tab" aria-label="Partidas">
       <ion-icon name="football-outline" aria-hidden="true"></ion-icon>
       <ion-label>Partidas</ion-label>
     </ion-tab-button>
 
-    <ion-tab-button tab="perfil" href="/tabs/perfil" role="tab" aria-label="Perfil">
+    <ion-tab-button tab="perfil" [routerLink]="['/tabs/perfil']" routerDirection="root" role="tab" aria-label="Perfil">
       <ion-icon name="person-circle-outline" aria-hidden="true"></ion-icon>
       <ion-label>Perfil</ion-label>
     </ion-tab-button>
